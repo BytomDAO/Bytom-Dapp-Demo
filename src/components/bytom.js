@@ -63,4 +63,9 @@ export function listUTXO(params)
   }).then(response => {
     return response.data.result.data[0];
   })
+
+  // window.bytomAPI.sdk.query.listUtxo(params)
+  //   .then( resp =>{
+  //       return resp.data.result.data[0];
+  //   })
 }

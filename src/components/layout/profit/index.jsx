@@ -1,7 +1,8 @@
 import React from 'react'
-import { FixedLimitDeposit } from './action'
+import { FixedLimitProfit } from './action'
+import { dueBlockHeight, expireBlockHeight} from "../../constants";
 
-export default class Save extends React.Component {
+export default class Profit extends React.Component {
 
   constructor(props) {
     super(props);
@@ -30,22 +31,24 @@ export default class Save extends React.Component {
     const amount = Number(event.target.amount.value)
     const address = event.target.address.value
 
-    FixedLimitDeposit(amount, address)
-
-
+    FixedLimitProfit(amount, address)
   }
 
   render() {
     return (
       <div>
-        <h2>Save</h2>
+        <h2>Profit</h2>
+        <div className="mt-3 mb-4">
+          <p className='lead'>Profit should get between the block height {dueBlockHeight} and {expireBlockHeight}.</p>
+          <p className='lead'>Send {this.state.amount} Bill Asset from the selected chrome extension account, and the address {this.state.address} will get the double of what you Deposit Asset.</p>
+        </div>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
-            <label>Amount</label>
+            <label>Bill Asset Amount</label>
             <input
               type="amount"
               className="form-control"
-              placeholder="Amount Saving"
+              placeholder="Amount Profit"
               name="amount"
               value={this.state.amount}
               onChange={this.handleInputChange} />

@@ -1,24 +1,47 @@
 import React, { Component } from "react";
 import '../styles/App.css';
-import { NavLink, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import  Profit  from './layout/profit'
 import Saving from './layout/save'
+import Footer from './layout/footer'
+import Header from './layout/header'
+
+import { assetDeposited, assetBill } from "./constants";
 
 const App = () => (
-  <div className='app'>
-    <h1>Bytom Dapp demo</h1>
-    <Navigation />
-    <Main />
+  <div>
+    <Header />
+    <Constants />
+    <section className="portfolio" id="portfolio">
+      <div className="container">
+        <Main />
+      </div>
+    </section>
+    <Footer />
   </div>
 );
 
-const Navigation = () => (
-  <nav>
-    <ul>
-      <li><NavLink exact activeClassName="current" to='/'>Saving</NavLink></li>
-      <li><NavLink exact activeClassName="current" to='/profit'>Profit</NavLink></li>
-    </ul>
-  </nav>
+const Constants = () =>(
+  <header className="masthead bg-primary text-white">
+    <div className="container">
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <span className="mr-5">Deposit Asset ID: </span>
+            </td>
+            <td>{assetDeposited}</td>
+          </tr>
+          <tr>
+            <td>
+              <span className="mr-5">Bill Asset ID: </span>
+            </td>
+            <td>{assetBill}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </header>
 );
 
 const Main = () => (

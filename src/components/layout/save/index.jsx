@@ -1,7 +1,8 @@
 import React from 'react'
-import { FixedLimitProfit } from './action'
+import { FixedLimitDeposit } from './action'
+import { dueBlockHeight } from '../../constants'
 
-export default class Profit extends React.Component {
+export default class Save extends React.Component {
 
   constructor(props) {
     super(props);
@@ -30,20 +31,24 @@ export default class Profit extends React.Component {
     const amount = Number(event.target.amount.value)
     const address = event.target.address.value
 
-    FixedLimitProfit(amount, address)
+    FixedLimitDeposit(amount, address)
   }
 
   render() {
     return (
       <div>
-        <h2>Profit</h2>
+        <h2>Deposit</h2>
+        <div className="mt-3 mb-4">
+          <p className='lead'>Deposit should happened under the block height {dueBlockHeight}.</p>
+          <p className='lead' >Spend {this.state.amount} Deposit Asset from your account {this.state.address} and you will get the relevant {this.state.amount} Bill Asset.</p>
+        </div>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
-            <label>Amount</label>
+            <label>Deposit Asset Amount</label>
             <input
               type="amount"
               className="form-control"
-              placeholder="Amount Profit"
+              placeholder="Amount Saving"
               name="amount"
               value={this.state.amount}
               onChange={this.handleInputChange} />
