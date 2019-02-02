@@ -166,6 +166,14 @@ section h2 {
     }
 }
 
+.nav > li.nav-item > a.nav-link.active {
+    color: #fff;
+    background: #18BC9C;
+}
+.nav > li.nav-item > a.nav-link.active:active, .nav > li.nav-item > a.nav-link.active:focus, .nav > li.nav-item > a.nav-link.active:hover {
+    color: #fff;
+    background: #18BC9C;
+}
 header.masthead {
     padding-top: calc(3rem + 72px);
     padding-bottom: 3rem;
@@ -380,3 +388,4 @@ a:focus, a:hover, a:active {
 .form-group label{
     color: #2C3E50;    
 }
+

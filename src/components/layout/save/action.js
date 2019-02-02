@@ -1,44 +1,75 @@
-import { spendUTXOAction, spendWalletAction, controlProgramAction, controlAddressAction, listUTXO } from '../../bytom'
-import { depositProgram, profitProgram, assetDeposited, assetBill } from "../../constants";
+import {
+  spendUTXOAction, spendWalletAction, controlProgramAction,
+  controlAddressAction, listDappUTXO, updateBase, updateUtxo ,updateBalances
+} from '../../bytom'
+import {
+  depositProgram, profitProgram, assetDeposited, assetBill, gas
+} from "../../constants";
 
-export function FixedLimitDeposit(amount, address) {
-  //
-  // listUTXO({
-  //   "filter": {
-  //     "script": depositProgram,
-  //     "asset": assetBill
-  //   }
-  // }).then(resp => {
-  listUTXO({
-    "filter": {
-      "script":"2022e829107201c6b975b1dc60b928117916285ceb4aa5c6d7b4b8cc48038083e074037caa8700c0",
-      "asset":"df4638860378a2203466833c935efa19f513ac3aae2cb52d36cee7fa5010b079"
-    }
-  }).then(resp => {
-    const billAmount = resp.amount
-    const billAsset = resp.asset
-    const utxo = resp.hash
+export function FixedLimitDeposit(account, amount, address) {
+  return new Promise((resolve, reject) => {
+    return listDappUTXO({
+      "program": depositProgram,
+      "asset": assetBill
+    }).then(resp => {
+      const billAmount = resp.amount
+      const billAsset = resp.asset
+      const utxo = resp.hash
 
+      if(amount > billAmount){
+        throw 'input amount must be smaller or equal to ' + billAmount +'.'
+      }else{
+        const input = []
+        const output = []
 
-    const gas = 40000000
-    const btm = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        input.push(spendUTXOAction(utxo, amount, address))
+        input.push(spendWalletAction(amount, assetDeposited))
 
-    const input = []
-    const output = []
+        if(amount < billAmount){
+          output.push(controlProgramAction(amount, assetDeposited, profitProgram))
+          output.push(controlAddressAction(amount, billAsset, address))
+          output.push(controlProgramAction((billAmount-amount), billAsset, depositProgram))
+        }else{
+          output.push(controlProgramAction(amount, assetDeposited, profitProgram))
+          output.push(controlAddressAction(billAmount, billAsset, address))
+        }
 
-    input.push(spendUTXOAction(utxo, amount, address))
-    input.push(spendWalletAction(amount, assetDeposited))
-    input.push(spendWalletAction(gas, btm))
+        window.bytom.advancedTransfer(account, input, output, gas*10000000)
+          .then((resp) => {
+            if(resp.action === 'reject'){
+              reject('user reject the request')
+            }else if(resp.action === 'success'){
+              updateUtxo({"hash": utxo})
+                .then(()=>{
+                  updateBalances({
+                    address,
+                    "asset": assetDeposited,
+                    "amount": -amount
+                  }).then(()=>{
+                    updateBalances({
+                      address,
+                      "asset": assetBill,
+                      "amount": amount
+                    }).then(()=>{
+                      resolve()
+                    })
+                  })
+                })
+            }
+          })
+          .catch(err => {
+            throw err
+          })
+      }
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
 
-    if(amount < billAmount){
-      output.push(controlProgramAction(amount, assetDeposited, profitProgram))
-      output.push(controlAddressAction(amount, billAsset, address))
-      output.push(controlProgramAction((billAmount-amount), billAsset, depositProgram))
-    }else{
-      output.push(controlProgramAction(amount, assetDeposited, profitProgram))
-      output.push(controlAddressAction(billAmount, billAsset, address))
-    }
-
-    window.bytom.advancedTransfer(input, output)
+export function UpdateProgramBase(){
+  return updateBase({
+    "program": depositProgram,
+    "asset": assetBill
   })
 }

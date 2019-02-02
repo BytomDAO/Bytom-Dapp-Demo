@@ -1,48 +1,78 @@
-import { spendUTXOAction, spendWalletAction, controlProgramAction, controlAddressAction, listUTXO } from '../../bytom'
-import { profitProgram, assetDeposited, assetBill } from "../../constants";
+import {
+  spendUTXOAction, spendWalletAction, controlProgramAction, controlAddressAction,
+  updateBase, updateBalances, updateUtxo, listDappUTXO
+} from '../../bytom'
+import {profitProgram, assetDeposited, assetBill, gas, banker, totalAmountBill, totalAmountCapital} from "../../constants";
 
-export function FixedLimitProfit(amountBill, saver) {
-
-  listUTXO({
-    "filter": {
-      "script": profitProgram,
+export function FixedLimitProfit(account, amountBill, saver) {
+  return new Promise((resolve, reject) => {
+    return listDappUTXO({
+      "program": profitProgram,
       "asset": assetDeposited
-    }
-  }).then(resp => {
-    const capitalAmount = resp.amount
-    const capitalAsset = resp.asset
-    const utxo = resp.hash
+    }).then(resp => {
 
-    const gas = 40000000
-    const btm = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      const capitalAmount = resp.amount
+      const capitalAsset = resp.asset
+      const utxo = resp.hash
 
-    const input = []
-    const output = []
+      if(amountBill > capitalAmount) {
+        throw 'input amount must be smaller or equal to ' + capitalAmount + '.'
+      }else{
+        const input = []
+        const output = []
 
-    const totalAmountBill = 10000000000
-    const totalAmountCapital = 20000000000
+        const sAmountBill = amountBill/100000000
+        const sTotalAmountBill = totalAmountBill/100000000
+        const gain = totalAmountCapital*sAmountBill/sTotalAmountBill
 
-    const sAmountBill = amountBill/100000000
-    const sTotalAmountBill = totalAmountBill/100000000
-    const gain = totalAmountCapital*sAmountBill/sTotalAmountBill
+        input.push(spendUTXOAction(utxo, amountBill, saver))
+        input.push(spendWalletAction(amountBill, assetBill))
 
-    const banker = "00140014f19df269f9334bdcb496da6b63b275d49447"
+        if(amountBill < capitalAmount){
+          output.push(controlProgramAction(amountBill, assetBill, banker ))
+          output.push(controlAddressAction(gain, capitalAsset, saver))
+          output.push(controlProgramAction((capitalAmount - gain), capitalAsset, profitProgram))
+        }else{
+          output.push(controlProgramAction(amountBill, assetBill, banker ))
+          output.push(controlAddressAction(capitalAmount, capitalAsset, saver))
+        }
 
-    input.push(spendUTXOAction(utxo, amountBill, saver))
-    input.push(spendWalletAction(amountBill, assetBill))
-    input.push(spendWalletAction(gas, btm))
-
-    if(amountBill < capitalAmount){
-      output.push(controlProgramAction(amountBill, assetBill, banker ))
-      output.push(controlAddressAction(gain, capitalAsset, saver))
-      output.push(controlProgramAction((capitalAmount - gain), capitalAsset, profitProgram))
-    }else{
-      output.push(controlProgramAction(amountBill, assetBill, banker ))
-      output.push(controlAddressAction(capitalAmount, capitalAsset, saver))
-    }
-
-    window.bytom.advancedTransfer(input, output)
-
+        window.bytom.advancedTransfer(account, input, output, gas*10000000)
+          .then((resp) => {
+            if(resp.action === 'reject'){
+              reject('user reject the request')
+            }else if(resp.action === 'success'){
+              updateUtxo({"hash": utxo})
+                .then(()=>{
+                  updateBalances({
+                    "address": saver,
+                    "asset": assetDeposited,
+                    "amount": amountBill*totalAmountCapital/totalAmountBill
+                  }).then(()=>{
+                    updateBalances({
+                      "address": account.address,
+                      "asset": assetBill,
+                      "amount": -amountBill
+                    }).then(()=>{
+                      resolve()
+                    })
+                  })
+                })
+            }
+          })
+          .catch(err => {
+            throw err
+          })
+      }
+    }).catch(err => {
+      reject(err)
+    })
   })
+}
 
+export function UpdateProgramBase(){
+  return updateBase({
+    "program": profitProgram,
+    "asset": assetDeposited
+  })
 }

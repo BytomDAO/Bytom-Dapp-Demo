@@ -5,6 +5,9 @@ import  Profit  from './layout/profit'
 import Saving from './layout/save'
 import Footer from './layout/footer'
 import Header from './layout/header'
+import Account from './layout/account'
+import bytomWrap from './layout/bytomWrap'
+
 
 import { assetDeposited, assetBill } from "./constants";
 
@@ -46,8 +49,9 @@ const Constants = () =>(
 
 const Main = () => (
   <Switch>
-    <Route exact path='/' component={Saving}></Route>
-    <Route exact path='/profit' component={Profit}></Route>
+    <Route exact path='/' component={bytomWrap(Saving)}/>
+    <Route exact path='/profit' component={bytomWrap(Profit)}/>
+    <Route exact path='/account' component={bytomWrap(Account)}/>
   </Switch>
 );
 

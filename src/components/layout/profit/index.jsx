@@ -1,14 +1,17 @@
 import React from 'react'
 import { FixedLimitProfit } from './action'
-import { dueBlockHeight, expireBlockHeight} from "../../constants";
+import {dueBlockHeight, expireBlockHeight, totalAmountBill, totalAmountCapital} from "../../constants";
+import {connect} from "react-redux";
 
-export default class Profit extends React.Component {
+class Profit extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       amount: '',
-      address: ''
+      address: '',
+      msg:'',
+      error:''
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -29,9 +32,21 @@ export default class Profit extends React.Component {
     event.preventDefault();
 
     const amount = Number(event.target.amount.value)
+    const account = this.props.account
     const address = event.target.address.value
 
-    FixedLimitProfit(amount, address)
+    FixedLimitProfit(account, amount, address)
+      .then(()=> {
+        this.setState({
+          error:'',
+          msg:`Submit success!!! you spent ${amount} bill asset, and gain ${amount*totalAmountCapital/totalAmountBill} deposit asset.`
+        })
+      }).catch(err => {
+      this.setState({
+        error: err,
+        msg:''
+      })
+    })
   }
 
   render() {
@@ -39,8 +54,8 @@ export default class Profit extends React.Component {
       <div>
         <h2>Profit</h2>
         <div className="mt-3 mb-4">
-          <p className='lead'>Profit should get between the block height {dueBlockHeight} and {expireBlockHeight}.</p>
-          <p className='lead'>Send {this.state.amount} Bill Asset from the selected chrome extension account, and the address {this.state.address} will get the double of what you Deposit Asset.</p>
+          <p className='lead'>Profit should get above the block height {dueBlockHeight}.</p>
+          <p className='lead'>Send {this.state.amount} Bill Asset from your chrome extension account <b className="font-weight-bolder text-uppercase">{this.props.account.alias}</b>, and the address {this.state.address} will gain {this.state.amount*totalAmountCapital/totalAmountBill || ''} Deposit Asset.</p>
         </div>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
@@ -63,9 +78,23 @@ export default class Profit extends React.Component {
               value={this.state.address}
               onChange={this.handleInputChange} />
           </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
+          <p>Fee:  0.4 BTM</p>
+          <button type="submit" className="btn btn-primary">Profit to address</button>
+          {this.state.msg && <div className="alert alert-success mt-4" role="alert">
+            {this.state.msg}
+          </div>}
+          {this.state.error && <div className="alert alert-danger mt-4" role="alert">
+            {this.state.error}
+          </div>}
         </form>
       </div>
     )
   }
 }
+
+
+const mapStateToProps = state => ({
+  account: state.account
+})
+
+export default connect(mapStateToProps)(Profit)

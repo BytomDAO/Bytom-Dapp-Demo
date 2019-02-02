@@ -1,10 +1,20 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
+import NetworkInfo from './NetworkInfo'
+import { UpdateProgramBase as updateSave } from "../save/action";
+import { UpdateProgramBase as updateProfit } from "../profit/action";
 
 const Header = class extends Component {
 
   constructor (props) {
     super(props)
+  }
+
+  componentDidMount() {
+    if(window.bytom){
+      updateSave();
+      updateProfit();
+    }
   }
 
   render () {
@@ -21,7 +31,7 @@ const Header = class extends Component {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarResponsive">
-            <ul className="navbar-nav ml-auto">
+            <ul className="navbar-nav mr-auto">
               <li className="nav-item mx-0 mx-lg-1">
                 <NavLink  exact activeClassName="active" className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" to='/'>Saving</NavLink>
               </li>
@@ -29,12 +39,13 @@ const Header = class extends Component {
                 <NavLink  exact activeClassName="active" className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"  to='/profit'>Profit</NavLink>
               </li>
             </ul>
+            <NetworkInfo/>
           </div>
-        </div>
 
+        </div>
       </nav>
     )
   }
 }
 
-export default Header;
+export default Header

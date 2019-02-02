@@ -1,14 +1,17 @@
 import React from 'react'
-import { FixedLimitDeposit } from './action'
-import { dueBlockHeight } from '../../constants'
+import { FixedLimitDeposit} from './action'
+import { dueBlockHeight, gas } from '../../constants'
+import {connect} from "react-redux";
 
-export default class Save extends React.Component {
+class Save extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       amount: '',
-      address: ''
+      address: '',
+      msg:'',
+      error:''
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -29,9 +32,21 @@ export default class Save extends React.Component {
     event.preventDefault();
 
     const amount = Number(event.target.amount.value)
-    const address = event.target.address.value
+    const account = this.props.account
+    const address = account.address
 
-    FixedLimitDeposit(amount, address)
+    FixedLimitDeposit(account, amount, address)
+      .then(()=> {
+          this.setState({
+            error:'',
+            msg:`Submit success!!! you spent ${amount} deposite asset,and gain ${amount} bill asset.`
+          })
+        }).catch(err => {
+          this.setState({
+            error:err,
+            msg: ''
+          })
+        })
   }
 
   render() {
@@ -39,8 +54,9 @@ export default class Save extends React.Component {
       <div>
         <h2>Deposit</h2>
         <div className="mt-3 mb-4">
-          <p className='lead'>Deposit should happened under the block height {dueBlockHeight}.</p>
-          <p className='lead' >Spend {this.state.amount} Deposit Asset from your account {this.state.address} and you will get the relevant {this.state.amount} Bill Asset.</p>
+          <p className='lead'>Deposit should happen under the block height {dueBlockHeight}.</p>
+          <p className='lead' >Spend {this.state.amount} Deposit Asset from your current chrome extension account <b className="font-weight-bolder text-uppercase">{this.props.account.alias}</b> and you will get the relevant {this.state.amount} Bill Asset.</p>
+          <p>Please make sure that your account has enough Deposit Asset.</p>
         </div>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
@@ -53,19 +69,24 @@ export default class Save extends React.Component {
               value={this.state.amount}
               onChange={this.handleInputChange} />
           </div>
-          <div className="form-group">
-            <label >Address</label>
-            <input
-              type="address"
-              className="form-control"
-              placeholder="Address"
-              name="address"
-              value={this.state.address}
-              onChange={this.handleInputChange} />
-          </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
+          <p>Fee:  {gas} BTM</p>
+          <button type="submit" className="btn btn-primary">Spend Asset</button>
+
+          {this.state.msg && <div className="alert alert-success mt-4" role="alert">
+            {this.state.msg}
+          </div>}
+          {this.state.error && <div className="alert alert-danger mt-4" role="alert">
+            {this.state.error}
+          </div>}
+
         </form>
       </div>
     )
   }
 }
+
+const mapStateToProps = state => ({
+  account: state.account
+})
+
+export default connect(mapStateToProps)(Save)
