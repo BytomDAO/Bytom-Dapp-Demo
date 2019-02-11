@@ -8,7 +8,7 @@ export default function(WrappedComponent) {
   const BytomWrap = class extends Component {
 
     render () {
-      var contents = <div />
+      let contents = <div />
 
       if (
         window.bytom
@@ -24,9 +24,9 @@ export default function(WrappedComponent) {
                 <h1 className="title">
                   Hoo-ray! <strong>Bytom-Chrome-Extension</strong> is installed!
                 </h1>
-                <h2 className="subtitle">
+                <p className="lead">
                   However, you need to create a new account. Click the bytom icon in the top-right corner of your browser, then refresh the page.
-                </h2>
+                </p>
               </div>
               <div className="column" />
             </div>
