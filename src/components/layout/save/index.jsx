@@ -1,7 +1,6 @@
 import React from 'react'
 import { FixedLimitDeposit} from './action'
 import { dueBlockHeight, gas } from '../../constants'
-import {connect} from "react-redux";
 
 class Save extends React.Component {
 
@@ -18,6 +17,15 @@ class Save extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    if (
+      window.bytom
+      && window.bytom.defaultAccount
+    ) {
+      this.setState({ account: window.bytom.defaultAccount })
+    }
+  }
+
   handleInputChange(event) {
     const target = event.target;
     const value = target.value;
@@ -32,7 +40,7 @@ class Save extends React.Component {
     event.preventDefault();
 
     const amount = Number(event.target.amount.value)
-    const account = this.props.account
+    const account = this.state.account
     const address = account.address
 
     FixedLimitDeposit(account, amount, address)
@@ -55,7 +63,7 @@ class Save extends React.Component {
         <h2>Deposit</h2>
         <div className="mt-3 mb-4">
           <p className='lead'>Deposit should happen under the block height {dueBlockHeight}.</p>
-          <p className='lead' >Spend {this.state.amount} Deposit Asset from your current chrome extension account <b className="font-weight-bolder text-uppercase">{this.props.account.alias}</b> and you will get the relevant {this.state.amount} Bill Asset.</p>
+          <p className='lead' >Spend {this.state.amount} Deposit Asset from your current chrome extension account <b className="font-weight-bolder text-uppercase">{this.state.account&&this.state.account.alias}</b> and you will get the relevant {this.state.amount} Bill Asset.</p>
           <p>Please make sure that your account has enough Deposit Asset.</p>
         </div>
         <form onSubmit={this.handleSubmit}>
@@ -85,8 +93,4 @@ class Save extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  account: state.account
-})
-
-export default connect(mapStateToProps)(Save)
+export default Save

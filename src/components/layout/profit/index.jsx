@@ -1,7 +1,6 @@
 import React from 'react'
 import { FixedLimitProfit } from './action'
-import {dueBlockHeight, expireBlockHeight, totalAmountBill, totalAmountCapital} from "../../constants";
-import {connect} from "react-redux";
+import {dueBlockHeight, gas, totalAmountBill, totalAmountCapital} from "../../constants";
 
 class Profit extends React.Component {
 
@@ -18,6 +17,15 @@ class Profit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    if (
+      window.bytom
+      && window.bytom.defaultAccount
+    ) {
+      this.setState({ account: window.bytom.defaultAccount })
+    }
+  }
+
   handleInputChange(event) {
     const target = event.target;
     const value = target.value;
@@ -32,7 +40,7 @@ class Profit extends React.Component {
     event.preventDefault();
 
     const amount = Number(event.target.amount.value)
-    const account = this.props.account
+    const account = this.state.account
     const address = event.target.address.value
 
     FixedLimitProfit(account, amount, address)
@@ -55,7 +63,7 @@ class Profit extends React.Component {
         <h2>Profit</h2>
         <div className="mt-3 mb-4">
           <p className='lead'>Profit should get above the block height {dueBlockHeight}.</p>
-          <p className='lead'>Send {this.state.amount} Bill Asset from your chrome extension account <b className="font-weight-bolder text-uppercase">{this.props.account.alias}</b>, and the address {this.state.address} will gain {this.state.amount*totalAmountCapital/totalAmountBill || ''} Deposit Asset.</p>
+          <p className='lead'>Send {this.state.amount} Bill Asset from your chrome extension account <b className="font-weight-bolder text-uppercase">{this.state.account && this.state.account.alias}</b>, and the address {this.state.address} will gain {this.state.amount*totalAmountCapital/totalAmountBill || ''} Deposit Asset.</p>
         </div>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
@@ -78,7 +86,7 @@ class Profit extends React.Component {
               value={this.state.address}
               onChange={this.handleInputChange} />
           </div>
-          <p>Fee:  0.4 BTM</p>
+          <p>Fee:  {gas} BTM</p>
           <button type="submit" className="btn btn-primary">Profit to address</button>
           {this.state.msg && <div className="alert alert-success mt-4" role="alert">
             {this.state.msg}
@@ -92,9 +100,4 @@ class Profit extends React.Component {
   }
 }
 
-
-const mapStateToProps = state => ({
-  account: state.account
-})
-
-export default connect(mapStateToProps)(Profit)
+export default Profit
