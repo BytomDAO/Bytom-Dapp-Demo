@@ -1,6 +1,7 @@
 import {
   spendUTXOAction, spendWalletAction, controlProgramAction,
-  controlAddressAction, listDappUTXO, updateBase, updateUtxo ,updateBalances
+  controlAddressAction, listDappUTXO, updateBase, updateUtxo ,updateBalances,
+  contractArguments
 } from '../../bytom'
 import {
   depositProgram, profitProgram, assetDeposited, assetBill, gas
@@ -22,7 +23,9 @@ export function FixedLimitDeposit(account, amount, address) {
         const input = []
         const output = []
 
-        input.push(spendUTXOAction(utxo, amount, address))
+        const args = contractArguments(amount, address)
+
+        input.push(spendUTXOAction(utxo))
         input.push(spendWalletAction(amount, assetDeposited))
 
         if(amount < billAmount){
@@ -34,7 +37,7 @@ export function FixedLimitDeposit(account, amount, address) {
           output.push(controlAddressAction(billAmount, billAsset, address))
         }
 
-        window.bytom.advancedTransfer(account, input, output, gas*10000000)
+        window.bytom.advancedTransfer(account, input, output, gas*10000000, args)
           .then((resp) => {
             if(resp.action === 'reject'){
               reject('user reject the request')
@@ -52,8 +55,15 @@ export function FixedLimitDeposit(account, amount, address) {
                       "amount": amount
                     }).then(()=>{
                       resolve()
+                    }).catch(err => {
+                      throw err
                     })
+                  }).catch(err => {
+                    throw err
                   })
+                })
+                .catch(err => {
+                  throw err
                 })
             }
           })

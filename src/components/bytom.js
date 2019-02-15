@@ -1,30 +1,27 @@
 import axios from 'axios'
 
-export function spendUTXOAction(utxo, amount, address){
+export function spendUTXOAction(utxo){
   return {
     "type": "spend_utxo",
-    "output_id": utxo,
-    "arguments": [
-      {
-        "type": "integer",
-        "raw_data": {
-          "value": amount
-        }
-      },
-      {
-        "type": "address",
-        "raw_data": {
-          "value": address
-        }
-      },
-      {
-        "type": "data",
-        "raw_data": {
-          "value": ""
-        }
-      }
-    ]
+    "output_id": utxo
   }
+}
+
+export function contractArguments(amount, address){
+  return [
+    {
+      "type": "integer",
+      "value": amount
+    },
+    {
+      "type": "address",
+      "value": address
+    },
+    {
+      "type": "data",
+      "value": ""
+    }
+  ]
 }
 
 export function spendWalletAction(amount, asset){
@@ -53,28 +50,10 @@ export function controlAddressAction(amount, asset, address){
   }
 }
 
-export function listUTXO(params)
+export function listAddress(guid)
 {
-  const url = "/api/api/v1/btm/q/list-utxos"
-  return axios({
-    method: 'post',
-    url,
-    data: params
-  }).then(response => {
-    return response.data.result.data[0];
-  })
-}
-
-export function listAddress(params)
-{
-  const url = "/api/api/v1/btm//account/list-addresses"
-  return axios({
-    method: 'post',
-    url,
-    data: params
-  }).then(response => {
-    return response.data.result.data[0];
-  })
+  return bytomAPI.sdk.accounts.listAddressUseServer(guid)
+    .then(resp => resp[0])
 }
 
 export function listDappUTXO(params)
@@ -85,7 +64,12 @@ export function listDappUTXO(params)
     url,
     data: params
   }).then(response => {
-    return response.data.result.data[0];
+    if(response.data.code === 200){
+      return response.data.result.data[0];
+    }
+    else {
+      throw response.data.msg
+    }
   })
 }
 
@@ -97,7 +81,11 @@ export function updateBase(params)
     url,
     data: params
   }).then(response => {
-    return response.data.result;
+    if(response.data.code === 200){
+      return response.data.result;
+    }else {
+      throw response.data.msg
+    }
   })
 }
 
@@ -109,7 +97,11 @@ export function updateUtxo(params)
     url,
     data: params
   }).then(response => {
-    return response.data.result;
+    if(response.data.code === 200){
+      return response.data.result;
+    }else{
+      throw response.data.msg
+    }
   })
 }
 
@@ -121,7 +113,11 @@ export function updateBalances(params)
     url,
     data: params
   }).then(response => {
-    return response.data.result;
+    if(response.data.code === 200){
+      return response.data.result;
+    }else{
+      throw response.data.msg
+    }
   })
 }
 
@@ -133,6 +129,10 @@ export function listBalances(params)
     url,
     data: params
   }).then(response => {
-    return response.data.result;
+    if(response.data.code === 200){
+      return response.data.result;
+    }else{
+      throw response.data.msg
+    }
   })
 }

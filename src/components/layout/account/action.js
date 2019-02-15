@@ -5,7 +5,7 @@ import { assetDeposited, assetBill } from "../../constants";
 
 const updateBalances = (guid = '') => {
   return (dispatch) => {
-    return listAddress({guid})
+    return listAddress(guid)
       .then((resp)=>{
         const balances = resp.balances
         const billBalance = balances.filter(balance => balance.asset === assetBill)
