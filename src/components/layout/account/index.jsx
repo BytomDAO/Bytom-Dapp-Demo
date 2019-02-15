@@ -57,7 +57,7 @@ class Account extends Component {
           list.push( <tr key={'record'+i}>
             <th scope="row">{i}</th>
             <td>{re.amount}</td>
-            <td>{new Date(re.create_at * 1000).toUTCString()}</td>
+            <td>{new Date(re.create_at * 1000).toLocaleString()}</td>
           </tr>)
         }
       )
