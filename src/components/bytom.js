@@ -27,7 +27,7 @@ export function contractArguments(amount, address){
 export function spendWalletAction(amount, asset){
   return {
     "amount": amount,
-    "asset_id": asset,
+    "asset": asset,
     "type": "spend_wallet"
   }
 }
@@ -35,7 +35,7 @@ export function spendWalletAction(amount, asset){
 export function controlProgramAction(amount, asset, program){
   return {
     "amount": amount,
-    "asset_id": asset,
+    "asset": asset,
     "control_program": program,
     "type": "control_program"
   }
@@ -44,7 +44,7 @@ export function controlProgramAction(amount, asset, program){
 export function controlAddressAction(amount, asset, address){
   return {
     "amount": amount,
-    "asset_id": asset,
+    "asset": asset,
     "address": address,
     "type": "control_address"
   }
