@@ -1,6 +1,6 @@
 import {
   spendUTXOAction, spendWalletAction, controlProgramAction, controlAddressAction,
-  updateBase, updateBalances, updateUtxo, listDappUTXO, contractArguments
+  updateBalances, updateUtxo, listDappUTXO, contractArguments
 } from '../../bytom'
 import {profitProgram, assetDeposited, assetBill, gas, banker, totalAmountBill, totalAmountCapital} from "../../constants";
 
@@ -76,12 +76,5 @@ export function FixedLimitProfit(account, amountBill, saver) {
     }).catch(err => {
       reject(err)
     })
-  })
-}
-
-export function UpdateProgramBase(){
-  return updateBase({
-    "program": profitProgram,
-    "asset": assetDeposited
   })
 }

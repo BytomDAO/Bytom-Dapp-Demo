@@ -1,20 +1,11 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import NetworkInfo from './NetworkInfo'
-import { UpdateProgramBase as updateSave } from "../save/action";
-import { UpdateProgramBase as updateProfit } from "../profit/action";
 
 const Header = class extends Component {
 
   constructor (props) {
     super(props)
-  }
-
-  componentDidMount() {
-    if(window.bytom){
-      updateSave();
-      updateProfit();
-    }
   }
 
   render () {

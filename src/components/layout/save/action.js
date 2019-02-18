@@ -1,6 +1,6 @@
 import {
   spendUTXOAction, spendWalletAction, controlProgramAction,
-  controlAddressAction, listDappUTXO, updateBase, updateUtxo ,updateBalances,
+  controlAddressAction, listDappUTXO, updateUtxo ,updateBalances,
   contractArguments
 } from '../../bytom'
 import {
@@ -74,12 +74,5 @@ export function FixedLimitDeposit(account, amount, address) {
     }).catch(err => {
       reject(err)
     })
-  })
-}
-
-export function UpdateProgramBase(){
-  return updateBase({
-    "program": depositProgram,
-    "asset": assetBill
   })
 }

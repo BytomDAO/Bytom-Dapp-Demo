@@ -73,22 +73,6 @@ export function listDappUTXO(params)
   })
 }
 
-export function updateBase(params)
-{
-  const url = "/dapp/update-base"
-  return axios({
-    method: 'post',
-    url,
-    data: params
-  }).then(response => {
-    if(response.data.code === 200){
-      return response.data.result;
-    }else {
-      throw response.data.msg
-    }
-  })
-}
-
 export function updateUtxo(params)
 {
   const url = "/dapp/update-utxo"
