@@ -1,6 +1,7 @@
 import React from 'react'
 import { FixedLimitDeposit} from './action'
-import { dueBlockHeight, gas } from '../../constants'
+import GetContractArgs from '../../constants'
+import {transactionOnChain} from '../../bytom'
 
 class Save extends React.Component {
 
@@ -62,7 +63,7 @@ class Save extends React.Component {
       <div>
         <h2>Deposit</h2>
         <div className="mt-3 mb-4">
-          <p className='lead'>Deposit should happen under the block height {dueBlockHeight}.</p>
+          <p className='lead'>Deposit should happen under the block height {GetContractArgs().dueBlockHeight}.</p>
           <p className='lead' >Spend {this.state.amount} Deposit Asset from your current chrome extension account <b className="font-weight-bolder text-uppercase">{this.state.account&&this.state.account.alias}</b> and you will get the relevant {this.state.amount} Bill Asset.</p>
           <p>Please make sure that your account has enough Deposit Asset.</p>
         </div>
@@ -77,7 +78,7 @@ class Save extends React.Component {
               value={this.state.amount}
               onChange={this.handleInputChange} />
           </div>
-          <p>Fee:  {gas} BTM</p>
+          <p>Fee:  {GetContractArgs().gas} BTM</p>
           <button type="submit" className="btn btn-primary">Spend Asset</button>
 
           {this.state.msg && <div className="alert alert-success mt-4" role="alert">

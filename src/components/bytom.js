@@ -58,56 +58,57 @@ export function listAddress(guid)
 
 export function listDappUTXO(params)
 {
-  const url = "/dapp/list-utxos"
-  return axios({
-    method: 'post',
-    url,
-    data: params
-  }).then(response => {
-    if(response.data.code === 200){
-      return response.data.result.data[0];
-    }
-    else {
-      throw response.data.msg
-    }
-  })
+  let url
+  switch (window.bytom.defaultAccount.net){
+    case "testnet":
+      url = "/dapptestnet/list-utxos"
+      break
+    default:
+      url = "/dapp/list-utxos"
+  }
+  return post(url, params).then(resp => resp.data[0])
 }
 
 export function updateUtxo(params)
 {
-  const url = "/dapp/update-utxo"
-  return axios({
-    method: 'post',
-    url,
-    data: params
-  }).then(response => {
-    if(response.data.code === 200){
-      return response.data.result;
-    }else{
-      throw response.data.msg
-    }
-  })
+  let url
+  switch (window.bytom.defaultAccount.net) {
+    case "testnet":
+      url = "/dapptestnet/update-utxo"
+      break
+    default:
+      url = "/dapp/update-utxo"
+  }
+  return post(url, params)
 }
 
 export function updateBalances(params)
 {
-  const url = "/dapp/update-balance"
-  return axios({
-    method: 'post',
-    url,
-    data: params
-  }).then(response => {
-    if(response.data.code === 200){
-      return response.data.result;
-    }else{
-      throw response.data.msg
-    }
-  })
+  let url
+  switch (window.bytom.defaultAccount.net) {
+    case "testnet":
+      url = "/dapptestnet/update-balance"
+      break
+    default:
+      url = "/dapp/update-balance"
+  }
+  return post(url, params)
 }
 
 export function listBalances(params)
 {
-  const url = "/dapp/list-balances"
+  let url
+  switch (window.bytom.defaultAccount.net) {
+    case "testnet":
+      url = "/dapptestnet/list-balances"
+      break
+    default:
+      url = "/dapp/list-balances"
+  }
+  return post(url, params)
+}
+
+function post(url, params){
   return axios({
     method: 'post',
     url,

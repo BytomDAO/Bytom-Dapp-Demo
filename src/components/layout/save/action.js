@@ -1,17 +1,15 @@
 import {
   spendUTXOAction, spendWalletAction, controlProgramAction,
-  controlAddressAction, listDappUTXO, updateUtxo ,updateBalances,
+  controlAddressAction, listDappUTXO, updateUtxo, updateBalances,
   contractArguments
 } from '../../bytom'
-import {
-  depositProgram, profitProgram, assetDeposited, assetBill, gas
-} from "../../constants";
+import GetContractArgs from "../../constants";
 
 export function FixedLimitDeposit(account, amount, address) {
   return new Promise((resolve, reject) => {
     return listDappUTXO({
-      "program": depositProgram,
-      "asset": assetBill
+      "program": GetContractArgs().depositProgram,
+      "asset": GetContractArgs().assetBill
     }).then(resp => {
       const billAmount = resp.amount
       const billAsset = resp.asset
@@ -26,18 +24,18 @@ export function FixedLimitDeposit(account, amount, address) {
         const args = contractArguments(amount, address)
 
         input.push(spendUTXOAction(utxo))
-        input.push(spendWalletAction(amount, assetDeposited))
+        input.push(spendWalletAction(amount, GetContractArgs().assetDeposited))
 
         if(amount < billAmount){
-          output.push(controlProgramAction(amount, assetDeposited, profitProgram))
+          output.push(controlProgramAction(amount, GetContractArgs().assetDeposited, GetContractArgs().profitProgram))
           output.push(controlAddressAction(amount, billAsset, address))
-          output.push(controlProgramAction((billAmount-amount), billAsset, depositProgram))
+          output.push(controlProgramAction((billAmount-amount), billAsset, GetContractArgs().depositProgram))
         }else{
-          output.push(controlProgramAction(amount, assetDeposited, profitProgram))
+          output.push(controlProgramAction(amount, GetContractArgs().assetDeposited, GetContractArgs().profitProgram))
           output.push(controlAddressAction(billAmount, billAsset, address))
         }
 
-        window.bytom.advancedTransfer(account, input, output, gas*10000000, args)
+        window.bytom.advancedTransfer(account, input, output, GetContractArgs().gas*10000000, args, 1)
           .then((resp) => {
             if(resp.action === 'reject'){
               reject('user reject the request')
@@ -46,12 +44,12 @@ export function FixedLimitDeposit(account, amount, address) {
                 .then(()=>{
                   updateBalances({
                     address,
-                    "asset": assetDeposited,
+                    "asset": GetContractArgs().assetDeposited,
                     "amount": -amount
                   }).then(()=>{
                     updateBalances({
                       address,
-                      "asset": assetBill,
+                      "asset": GetContractArgs().assetBill,
                       "amount": amount
                     }).then(()=>{
                       resolve()

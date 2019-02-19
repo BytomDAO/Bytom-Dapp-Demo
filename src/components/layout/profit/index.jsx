@@ -1,6 +1,6 @@
 import React from 'react'
 import { FixedLimitProfit } from './action'
-import {dueBlockHeight, gas, totalAmountBill, totalAmountCapital} from "../../constants";
+import GetContractArgs from "../../constants";
 
 class Profit extends React.Component {
 
@@ -47,7 +47,7 @@ class Profit extends React.Component {
       .then(()=> {
         this.setState({
           error:'',
-          msg:`Submit success!!! you spent ${amount} bill asset, and gain ${amount*totalAmountCapital/totalAmountBill} deposit asset.`
+          msg:`Submit success!!! you spent ${amount} bill asset, and gain ${amount*GetContractArgs().totalAmountCapital/GetContractArgs().totalAmountBill} deposit asset.`
         })
       }).catch(err => {
       this.setState({
@@ -62,8 +62,8 @@ class Profit extends React.Component {
       <div>
         <h2>Profit</h2>
         <div className="mt-3 mb-4">
-          <p className='lead'>Profit should get above the block height {dueBlockHeight}.</p>
-          <p className='lead'>Send {this.state.amount} Bill Asset from your chrome extension account <b className="font-weight-bolder text-uppercase">{this.state.account && this.state.account.alias}</b>, and the address {this.state.address} will gain {this.state.amount*totalAmountCapital/totalAmountBill || ''} Deposit Asset.</p>
+          <p className='lead'>Profit should get above the block height {GetContractArgs().dueBlockHeight}.</p>
+          <p className='lead'>Send {this.state.amount} Bill Asset from your chrome extension account <b className="font-weight-bolder text-uppercase">{this.state.account && this.state.account.alias}</b>, and the address {this.state.address} will gain {this.state.amount*GetContractArgs().totalAmountCapital/GetContractArgs().totalAmountBill || ''} Deposit Asset.</p>
         </div>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
@@ -86,7 +86,7 @@ class Profit extends React.Component {
               value={this.state.address}
               onChange={this.handleInputChange} />
           </div>
-          <p>Fee:  {gas} BTM</p>
+          <p>Fee:  {GetContractArgs().gas} BTM</p>
           <button type="submit" className="btn btn-primary">Profit to address</button>
           {this.state.msg && <div className="alert alert-success mt-4" role="alert">
             {this.state.msg}

@@ -9,7 +9,7 @@ import Account from './layout/account'
 import bytomWrap from './layout/bytomWrap'
 
 
-import { assetDeposited, assetBill } from "./constants";
+import GetContractArgs from "./constants";
 
 const App = () => (
   <div>
@@ -33,13 +33,13 @@ const Constants = () =>(
             <td>
               <span className="mr-5">Deposit Asset ID: </span>
             </td>
-            <td>{assetDeposited}</td>
+            <td>{GetContractArgs().assetDeposited}</td>
           </tr>
           <tr>
             <td>
               <span className="mr-5">Bill Asset ID: </span>
             </td>
-            <td>{assetBill}</td>
+            <td>{GetContractArgs().assetBill}</td>
           </tr>
         </tbody>
       </table>

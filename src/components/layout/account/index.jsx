@@ -4,7 +4,7 @@ import React, {
 import { connect } from "react-redux"
 import jdenticon from "jdenticon"
 import action from "./action";
-import {assetDeposited, assetBill} from "../../constants";
+import GetContractArgs from "../../constants";
 import { listBalances } from '../../bytom'
 
 class Account extends Component {
@@ -27,7 +27,7 @@ class Account extends Component {
       this.setState({ account })
       if(account){
         this.props.updateBalances(account.guid)
-        this.listBalance(account, assetDeposited)
+        this.listBalance(account, GetContractArgs().assetDeposited)
       }
     }
   }
@@ -94,11 +94,11 @@ class Account extends Component {
             <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
               <li className="nav-item">
                 <a className="nav-link active" id="pills-home-tab" data-toggle="pill"
-                   href="#pills-deposit" onClick={() => this.listBalance(account, assetDeposited)} role="tab" aria-controls="pills-deposit" aria-selected="true">Deposit Asset Record</a>
+                   href="#pills-deposit" onClick={() => this.listBalance(account, GetContractArgs().assetDeposited)} role="tab" aria-controls="pills-deposit" aria-selected="true">Deposit Asset Record</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" id="pills-profile-tab" data-toggle="pill"
-                   href="#pills-profit" onClick={() => this.listBalance(account, assetBill)} role="tab" aria-controls="pills-profit" aria-selected="false">Bill Asset Record</a>
+                   href="#pills-profit" onClick={() => this.listBalance(account, GetContractArgs().assetBill)} role="tab" aria-controls="pills-profit" aria-selected="false">Bill Asset Record</a>
               </li>
             </ul>
             <div className="tab-content" id="pills-tabContent">

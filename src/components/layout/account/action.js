@@ -1,15 +1,15 @@
 import { listAddress } from '../../bytom'
 
 
-import { assetDeposited, assetBill } from "../../constants";
+import GetContractArgs from "../../constants";
 
 const updateBalances = (guid = '') => {
   return (dispatch) => {
     return listAddress(guid)
       .then((resp)=>{
         const balances = resp.balances
-        const billBalance = balances.filter(balance => balance.asset === assetBill)
-        const depositBalance = balances.filter(balance => balance.asset === assetDeposited)
+        const billBalance = balances.filter(balance => balance.asset === GetContractArgs().assetBill)
+        const depositBalance = balances.filter(balance => balance.asset === GetContractArgs().assetDeposited)
         if(billBalance.length === 1){
           dispatch({
             type: "UPDATE_BILL_ASSET_BALANCES",
