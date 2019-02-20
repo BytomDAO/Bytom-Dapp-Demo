@@ -50,11 +50,13 @@ export function FixedLimitProfit(account, amountBill, saver) {
               updateUtxo({"hash": utxo})
                 .then(()=>{
                   updateBalances({
+                    "tx_id": resp.message.result.data.transaction_hash,
                     "address": saver,
                     "asset": GetContractArgs().assetDeposited,
                     "amount": amountBill*GetContractArgs().totalAmountCapital/GetContractArgs().totalAmountBill
                   }).then(()=>{
                     updateBalances({
+                      "tx_id": resp.message.result.data.transaction_hash,
                       "address": account.address,
                       "asset": GetContractArgs().assetBill,
                       "amount": -amountBill

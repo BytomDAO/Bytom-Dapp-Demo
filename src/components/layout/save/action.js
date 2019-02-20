@@ -47,11 +47,13 @@ export function FixedLimitDeposit(account, amount, address) {
               updateUtxo({"hash": utxo})
                 .then(()=>{
                   updateBalances({
+                    "tx_id": resp.message.result.data.transaction_hash,
                     address,
                     "asset": GetContractArgs().assetDeposited,
                     "amount": -amount
                   }).then(()=>{
                     updateBalances({
+                      "tx_id": resp.message.result.data.transaction_hash,
                       address,
                       "asset": GetContractArgs().assetBill,
                       "amount": amount
