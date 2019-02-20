@@ -11,6 +11,10 @@ export function FixedLimitDeposit(account, amount, address) {
       "program": GetContractArgs().depositProgram,
       "asset": GetContractArgs().assetBill
     }).then(resp => {
+      if(!resp) {
+        throw 'cannot load UTXO info.'
+      }
+
       const billAmount = resp.amount
       const billAsset = resp.asset
       const utxo = resp.hash

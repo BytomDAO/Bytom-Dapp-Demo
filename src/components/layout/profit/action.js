@@ -10,9 +10,8 @@ export function FixedLimitProfit(account, amountBill, saver) {
       "asset": GetContractArgs().assetDeposited
     }).then(resp => {
 
-      if(resp.length === 0) {
+      if(!resp) {
         throw 'cannot load UTXO info.'
-        return
       }
 
       const capitalAmount = resp.amount
