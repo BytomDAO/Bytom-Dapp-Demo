@@ -2,7 +2,8 @@ import {
   spendUTXOAction, spendWalletAction, controlProgramAction, controlAddressAction,
   updateBalances, updateUtxo, listDappUTXO, contractArguments
 } from '../../bytom'
-import GetContractArgs from "../../constants";
+import GetContractArgs from '../../constants'
+import { matchesUTXO } from '../../filter'
 
 export function FixedLimitProfit(account, amountBill, saver) {
   return new Promise((resolve, reject) => {
@@ -14,13 +15,14 @@ export function FixedLimitProfit(account, amountBill, saver) {
         "order":"desc"
       }
     }).then(resp => {
-      if(!resp) {
+      if(resp.length === 0) {
         throw 'cannot load UTXO info.'
       }
 
-      const capitalAmount = resp.amount
-      const capitalAsset = resp.asset
-      const utxo = resp.hash
+      const result = matchesUTXO(resp, amountBill)
+      const capitalAmount = result.amount
+      const capitalAsset = result.asset
+      const utxo = result.hash
 
       if(amountBill > capitalAmount) {
         throw 'input amount must be smaller or equal to ' + capitalAmount + '.'

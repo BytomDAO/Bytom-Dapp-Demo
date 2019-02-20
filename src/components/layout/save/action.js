@@ -3,7 +3,7 @@ import {
   controlAddressAction, listDappUTXO, updateUtxo, updateBalances,
   contractArguments
 } from '../../bytom'
-import GetContractArgs from "../../constants";
+import GetContractArgs from '../../constants'
 
 export function FixedLimitDeposit(account, amount, address) {
   return new Promise((resolve, reject) => {
@@ -15,13 +15,14 @@ export function FixedLimitDeposit(account, amount, address) {
         "order":"desc"
       }
     }).then(resp => {
-      if(!resp) {
+      if(resp.length === 0) {
         throw 'cannot load UTXO info.'
       }
 
-      const billAmount = resp.amount
-      const billAsset = resp.asset
-      const utxo = resp.hash
+      const result = resp[0]
+      const billAmount = result.amount
+      const billAsset = result.asset
+      const utxo = result.hash
 
       if(amount > billAmount){
         throw 'input amount must be smaller or equal to ' + billAmount +'.'

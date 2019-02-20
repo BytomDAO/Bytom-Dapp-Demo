@@ -66,7 +66,7 @@ export function listDappUTXO(params)
     default:
       url = "/dapp/list-utxos"
   }
-  return post(url, params).then(resp => resp.data[0])
+  return post(url, params).then(resp => resp.data)
 }
 
 export function updateUtxo(params)
