@@ -5,6 +5,7 @@ import {
 import GetContractArgs from "../../constants";
 
 export function FixedLimitProfit(account, amountBill, saver) {
+  return new Promise((resolve, reject) => {
     return listDappUTXO({
       "program": GetContractArgs().profitProgram,
       "asset": GetContractArgs().assetDeposited
@@ -25,8 +26,8 @@ export function FixedLimitProfit(account, amountBill, saver) {
         const output = []
 
         const sAmountBill = amountBill/100000000
-        const sTotalAmountBill = totalAmountBill/100000000
-        const gain = totalAmountCapital*sAmountBill/sTotalAmountBill
+        const sTotalAmountBill = GetContractArgs().totalAmountBill/100000000
+        const gain = GetContractArgs().totalAmountCapital*sAmountBill/sTotalAmountBill
 
         const args = contractArguments(amountBill, saver)
 
@@ -81,6 +82,7 @@ export function FixedLimitProfit(account, amountBill, saver) {
     }).catch(err => {
       reject(err)
     })
+  })
 }
 
 

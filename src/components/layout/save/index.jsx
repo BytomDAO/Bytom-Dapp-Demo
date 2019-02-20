@@ -1,7 +1,6 @@
 import React from 'react'
 import { FixedLimitDeposit} from './action'
 import GetContractArgs from '../../constants'
-import {transactionOnChain} from '../../bytom'
 
 class Save extends React.Component {
 
