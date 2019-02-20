@@ -9,7 +9,11 @@ export function FixedLimitDeposit(account, amount, address) {
   return new Promise((resolve, reject) => {
     return listDappUTXO({
       "program": GetContractArgs().depositProgram,
-      "asset": GetContractArgs().assetBill
+      "asset": GetContractArgs().assetBill,
+      "sort": {
+        "by":"amount",
+        "order":"desc"
+      }
     }).then(resp => {
       if(!resp) {
         throw 'cannot load UTXO info.'

@@ -8,9 +8,12 @@ export function FixedLimitProfit(account, amountBill, saver) {
   return new Promise((resolve, reject) => {
     return listDappUTXO({
       "program": GetContractArgs().profitProgram,
-      "asset": GetContractArgs().assetDeposited
+      "asset": GetContractArgs().assetDeposited,
+      "sort": {
+        "by":"amount",
+        "order":"desc"
+      }
     }).then(resp => {
-
       if(!resp) {
         throw 'cannot load UTXO info.'
       }
