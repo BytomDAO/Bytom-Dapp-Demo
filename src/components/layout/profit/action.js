@@ -4,6 +4,7 @@ import {
 } from '../../bytom'
 import GetContractArgs from '../../constants'
 import { matchesUTXO } from '../../filter'
+import BigNumber from 'bignumber.js'
 
 export function FixedLimitProfit(account, amountBill, saver) {
   return new Promise((resolve, reject) => {
@@ -30,9 +31,14 @@ export function FixedLimitProfit(account, amountBill, saver) {
         const input = []
         const output = []
 
-        const sAmountBill = amountBill/100000000
-        const sTotalAmountBill = GetContractArgs().totalAmountBill/100000000
-        const gain = GetContractArgs().totalAmountCapital*sAmountBill/sTotalAmountBill
+        const sAmountBill = BigNumber(amountBill).div( 100000000 )
+        const sTotalAmountBill = BigNumber(GetContractArgs().totalAmountBill).div( 100000000 )
+        const multiplyResult = BigNumber( GetContractArgs().totalAmountCapital).multipliedBy( sAmountBill )
+        const gain = multiplyResult.div( sTotalAmountBill )
+
+        if( multiplyResult.isGreaterThan( 9223372036854775807 ) ){
+          throw 'The entered amount is too big, please reduce the amount.'
+        }
 
         const args = contractArguments(amountBill, saver)
 
@@ -42,7 +48,7 @@ export function FixedLimitProfit(account, amountBill, saver) {
         if(amountBill < capitalAmount){
           output.push(controlProgramAction(amountBill, GetContractArgs().assetBill, GetContractArgs().banker ))
           output.push(controlAddressAction(gain, capitalAsset, saver))
-          output.push(controlProgramAction((capitalAmount - gain), capitalAsset, GetContractArgs().profitProgram))
+          output.push(controlProgramAction((BigNumber(capitalAmount).minus(gain)), capitalAsset, GetContractArgs().profitProgram))
         }else{
           output.push(controlProgramAction(amountBill, GetContractArgs().assetBill, GetContractArgs().banker ))
           output.push(controlAddressAction(capitalAmount, capitalAsset, saver))

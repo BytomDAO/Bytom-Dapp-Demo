@@ -4,6 +4,7 @@ import {
   contractArguments
 } from '../../bytom'
 import GetContractArgs from '../../constants'
+import BigNumber from 'bignumber.js'
 
 export function FixedLimitDeposit(account, amount, address) {
   return new Promise((resolve, reject) => {
@@ -38,7 +39,7 @@ export function FixedLimitDeposit(account, amount, address) {
         if(amount < billAmount){
           output.push(controlProgramAction(amount, GetContractArgs().assetDeposited, GetContractArgs().profitProgram))
           output.push(controlAddressAction(amount, billAsset, address))
-          output.push(controlProgramAction((billAmount-amount), billAsset, GetContractArgs().depositProgram))
+          output.push(controlProgramAction((BigNumber(billAmount).minus(BigNumber(amount))), billAsset, GetContractArgs().depositProgram))
         }else{
           output.push(controlProgramAction(amount, GetContractArgs().assetDeposited, GetContractArgs().profitProgram))
           output.push(controlAddressAction(billAmount, billAsset, address))
