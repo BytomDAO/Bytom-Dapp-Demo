@@ -1,4 +1,4 @@
-import config from '../../contracts/configure.json'
+import config from 'config';
 
 let depositProgram
 let profitProgram
