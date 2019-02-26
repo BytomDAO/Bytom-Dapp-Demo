@@ -34,7 +34,7 @@ export function FixedLimitProfit(account, amountBill, saver) {
         const sAmountBill = BigNumber(amountBill).div( 100000000 )
         const sTotalAmountBill = BigNumber(GetContractArgs().totalAmountBill).div( 100000000 )
         const multiplyResult = BigNumber( GetContractArgs().totalAmountCapital).multipliedBy( sAmountBill )
-        const gain = multiplyResult.div( sTotalAmountBill )
+        const gain = multiplyResult.div( sTotalAmountBill ).toNumber()
 
         if( multiplyResult.isGreaterThan( 9223372036854775807 ) ){
           throw 'The entered amount is too big, please reduce the amount.'
@@ -48,7 +48,7 @@ export function FixedLimitProfit(account, amountBill, saver) {
         if(amountBill < capitalAmount){
           output.push(controlProgramAction(amountBill, GetContractArgs().assetBill, GetContractArgs().banker ))
           output.push(controlAddressAction(gain, capitalAsset, saver))
-          output.push(controlProgramAction((BigNumber(capitalAmount).minus(gain)), capitalAsset, GetContractArgs().profitProgram))
+          output.push(controlProgramAction((BigNumber(capitalAmount).minus(gain)).toNumber(), capitalAsset, GetContractArgs().profitProgram))
         }else{
           output.push(controlProgramAction(amountBill, GetContractArgs().assetBill, GetContractArgs().banker ))
           output.push(controlAddressAction(capitalAmount, capitalAsset, saver))

@@ -39,7 +39,7 @@ export function FixedLimitDeposit(account, amount, address) {
         if(amount < billAmount){
           output.push(controlProgramAction(amount, GetContractArgs().assetDeposited, GetContractArgs().profitProgram))
           output.push(controlAddressAction(amount, billAsset, address))
-          output.push(controlProgramAction((BigNumber(billAmount).minus(BigNumber(amount))), billAsset, GetContractArgs().depositProgram))
+          output.push(controlProgramAction((BigNumber(billAmount).minus(BigNumber(amount))).toNumber(), billAsset, GetContractArgs().depositProgram))
         }else{
           output.push(controlProgramAction(amount, GetContractArgs().assetDeposited, GetContractArgs().profitProgram))
           output.push(controlAddressAction(billAmount, billAsset, address))
