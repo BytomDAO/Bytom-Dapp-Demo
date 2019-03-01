@@ -18,7 +18,7 @@ export function FixedLimitDeposit(account, amount, address) {
       }
     }).then(resp => {
       if(resp.length === 0) {
-        throw 'cannot load UTXO info.'
+        throw 'Empty UTXO info, it might be that the utxo is locked. Please retry after 60s.'
       }
 
       const result = matchesUTXO(resp, amount)
@@ -46,37 +46,37 @@ export function FixedLimitDeposit(account, amount, address) {
           output.push(controlAddressAction(billAmount, billAsset, address))
         }
 
-        window.bytom.advancedTransfer(account, input, output, GetContractArgs().gas*10000000, args, 1)
-          .then((resp) => {
-            if(resp.action === 'reject'){
-              reject('user reject the request')
-            }else if(resp.action === 'success'){
-              updateUtxo({"hash": utxo})
-                .then(()=>{
+        updateUtxo({"hash": utxo})
+          .then(()=>{
+          window.bytom.advancedTransfer(account, input, output, GetContractArgs().gas*10000000, args, 1)
+            .then((resp) => {
+              if(resp.action === 'reject'){
+                reject('user reject the request')
+              }else if(resp.action === 'success'){
+                updateBalances({
+                  "tx_id": resp.message.result.data.transaction_hash,
+                  address,
+                  "asset": GetContractArgs().assetDeposited,
+                  "amount": -amount
+                }).then(()=>{
                   updateBalances({
                     "tx_id": resp.message.result.data.transaction_hash,
                     address,
-                    "asset": GetContractArgs().assetDeposited,
-                    "amount": -amount
+                    "asset": GetContractArgs().assetBill,
+                    "amount": amount
                   }).then(()=>{
-                    updateBalances({
-                      "tx_id": resp.message.result.data.transaction_hash,
-                      address,
-                      "asset": GetContractArgs().assetBill,
-                      "amount": amount
-                    }).then(()=>{
-                      resolve()
-                    }).catch(err => {
-                      throw err
-                    })
+                    resolve()
                   }).catch(err => {
                     throw err
                   })
-                })
-                .catch(err => {
+                }).catch(err => {
                   throw err
                 })
-            }
+              }
+            })
+            .catch(err => {
+              throw err
+            })
           })
           .catch(err => {
             throw err
