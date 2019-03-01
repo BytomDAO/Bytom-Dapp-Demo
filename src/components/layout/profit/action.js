@@ -20,13 +20,16 @@ export function FixedLimitProfit(account, amountBill, saver) {
         throw 'cannot load UTXO info.'
       }
 
-      const result = matchesUTXO(resp, amountBill)
+      const radio = BigNumber( GetContractArgs().totalAmountCapital).div(GetContractArgs().totalAmountBill)
+      const matchesAmount = radio.multipliedBy(amountBill).toNumber()
+
+      const result = matchesUTXO(resp, matchesAmount)
       const capitalAmount = result.amount
       const capitalAsset = result.asset
       const utxo = result.hash
 
-      if(amountBill > capitalAmount) {
-        throw 'input amount must be smaller or equal to ' + capitalAmount + '.'
+      if(matchesAmount > capitalAmount) {
+        throw 'input amount must be smaller or equal to ' + capitalAmount/radio.toNumber() + '.'
       }else{
         const input = []
         const output = []
@@ -45,7 +48,7 @@ export function FixedLimitProfit(account, amountBill, saver) {
         input.push(spendUTXOAction(utxo))
         input.push(spendWalletAction(amountBill, GetContractArgs().assetBill))
 
-        if(amountBill < capitalAmount){
+        if( gain < capitalAmount ){
           output.push(controlProgramAction(amountBill, GetContractArgs().assetBill, GetContractArgs().banker ))
           output.push(controlAddressAction(gain, capitalAsset, saver))
           output.push(controlProgramAction((BigNumber(capitalAmount).minus(gain)).toNumber(), capitalAsset, GetContractArgs().profitProgram))
