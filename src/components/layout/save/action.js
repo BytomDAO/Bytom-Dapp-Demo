@@ -4,6 +4,7 @@ import {
   contractArguments
 } from '../../bytom'
 import GetContractArgs from '../../constants'
+import { matchesUTXO } from '../../filter'
 import BigNumber from 'bignumber.js'
 
 export function FixedLimitDeposit(account, amount, address) {
@@ -20,7 +21,7 @@ export function FixedLimitDeposit(account, amount, address) {
         throw 'cannot load UTXO info.'
       }
 
-      const result = resp[0]
+      const result = matchesUTXO(resp, amount)
       const billAmount = result.amount
       const billAsset = result.asset
       const utxo = result.hash
