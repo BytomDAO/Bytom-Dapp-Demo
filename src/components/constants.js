@@ -1,4 +1,5 @@
 import config from 'config';
+import BigNumber from "bignumber.js/bignumber";
 
 let depositProgram
 let profitProgram
@@ -10,6 +11,7 @@ let dueBlockHeight
 let expireBlockHeight
 let banker
 let gas
+let radio
 
 const GetContractArgs = function() {
   if(window.bytom && window.bytom.defaultAccount && window.bytom.defaultAccount.net){
@@ -27,6 +29,7 @@ const GetContractArgs = function() {
       expireBlockHeight = object.expireBlockHeight
       banker = object.banker
       gas = object.gas
+      radio =BigNumber(object.totalAmountCapital).div(object.totalAmountBill).toNumber()
     }
   }
 
@@ -40,7 +43,8 @@ const GetContractArgs = function() {
       dueBlockHeight,
       expireBlockHeight,
       banker,
-      gas
+      gas,
+      radio
     };
 }
 

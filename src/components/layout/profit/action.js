@@ -18,9 +18,11 @@ export function FixedLimitProfit(account, amountBill, saver) {
     }).then(resp => {
       if(resp.length === 0) {
         throw 'Empty UTXO info, it might be that the utxo is locked. Please retry after 60s.'
+      }else if(amountBill < 100000000){
+        throw 'Please enter an amount bigger or equal than 100000000.'
       }
 
-      const radio = BigNumber( GetContractArgs().totalAmountCapital).div(GetContractArgs().totalAmountBill)
+      const radio = BigNumber( GetContractArgs().radio )
       const matchesAmount = radio.multipliedBy(amountBill).toNumber()
 
       const result = matchesUTXO(resp, matchesAmount)

@@ -17,8 +17,11 @@ export function FixedLimitDeposit(account, amount, address) {
         "order":"desc"
       }
     }).then(resp => {
+      const limit =  GetContractArgs().radio * 100000000
       if(resp.length === 0) {
         throw 'Empty UTXO info, it might be that the utxo is locked. Please retry after 60s.'
+      }else if(amount < limit){
+        throw `Please enter an amount bigger or equal than ${limit}.`
       }
 
       const result = matchesUTXO(resp, amount)
