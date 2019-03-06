@@ -7,7 +7,7 @@ import GetContractArgs from '../../constants'
 import { matchesUTXO } from '../../filter'
 import BigNumber from 'bignumber.js'
 
-export function FixedLimitDeposit(account, amount, address) {
+export function FixedLimitDeposit(amount, address) {
   return new Promise((resolve, reject) => {
     return listDappUTXO({
       "program": GetContractArgs().depositProgram,
@@ -51,7 +51,7 @@ export function FixedLimitDeposit(account, amount, address) {
 
         updateUtxo({"hash": utxo})
           .then(()=>{
-          window.bytom.advancedTransfer(account, input, output, GetContractArgs().gas*10000000, args, 1)
+          window.bytom.advancedTransfer(input, output, GetContractArgs().gas*10000000, args, 1)
             .then((resp) => {
               if(resp.action === 'reject'){
                 reject('user reject the request')

@@ -23,14 +23,14 @@ export function FixedLimitProfit(account, amountBill, saver) {
       }
 
       const radio = BigNumber( GetContractArgs().radio )
-      const matchesAmount = radio.multipliedBy(amountBill).toNumber()
+      const profitAmount = radio.multipliedBy(amountBill).toNumber()
 
-      const result = matchesUTXO(resp, matchesAmount)
+      const result = matchesUTXO(resp, profitAmount)
       const capitalAmount = result.amount
       const capitalAsset = result.asset
       const utxo = result.hash
 
-      if(matchesAmount > capitalAmount) {
+      if(profitAmount > capitalAmount) {
         throw 'input amount must be smaller or equal to ' + capitalAmount/radio.toNumber() + '.'
       }else{
         const input = []
@@ -61,19 +61,20 @@ export function FixedLimitProfit(account, amountBill, saver) {
 
         updateUtxo({"hash": utxo})
           .then(()=>{
-            window.bytom.advancedTransfer(account, input, output, GetContractArgs().gas*10000000, args, 1)
+            window.bytom.advancedTransfer(input, output, GetContractArgs().gas*10000000, args, 1)
               .then((resp) => {
                 if(resp.action === 'reject'){
                   reject('user reject the request')
                 }else if(resp.action === 'success'){
+                  const transactionHash = resp.message.result.data.transaction_hash
                   updateBalances({
-                    "tx_id": resp.message.result.data.transaction_hash,
+                    "tx_id": transactionHash,
                     "address": saver,
                     "asset": GetContractArgs().assetDeposited,
-                    "amount": amountBill*GetContractArgs().totalAmountCapital/GetContractArgs().totalAmountBill
+                    "amount": profitAmount
                   }).then(()=>{
                     updateBalances({
-                      "tx_id": resp.message.result.data.transaction_hash,
+                      "tx_id": transactionHash,
                       "address": account.address,
                       "asset": GetContractArgs().assetBill,
                       "amount": -amountBill

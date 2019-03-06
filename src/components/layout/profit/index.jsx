@@ -1,6 +1,7 @@
 import React from 'react'
 import { FixedLimitProfit } from './action'
 import GetContractArgs from "../../constants";
+import BigNumber from 'bignumber.js'
 
 class Profit extends React.Component {
 
@@ -47,7 +48,7 @@ class Profit extends React.Component {
       .then(()=> {
         this.setState({
           error:'',
-          msg:`Submit success!!! you spent ${amount} bill asset, and gain ${amount*GetContractArgs().totalAmountCapital/GetContractArgs().totalAmountBill} deposit asset.`
+          msg:`Submit success!!! you spent ${amount} bill asset, and gain ${BigNumber(amount).multipliedBy(GetContractArgs().radio).toNumber()} deposit asset.`
         })
       }).catch(err => {
       this.setState({
@@ -63,7 +64,7 @@ class Profit extends React.Component {
         <h2>Profit</h2>
         <div className="mt-3 mb-4">
           <p className='lead'>Profit should get above the block height {GetContractArgs().dueBlockHeight}.</p>
-          <p className='lead'>Send {this.state.amount} Bill Asset from your chrome extension account <b className="font-weight-bolder text-uppercase">{this.state.account && this.state.account.alias}</b>, and the address {this.state.address} will gain {this.state.amount*GetContractArgs().totalAmountCapital/GetContractArgs().totalAmountBill || ''} Deposit Asset.</p>
+          <p className='lead'>Send {this.state.amount} Bill Asset from your chrome extension account <b className="font-weight-bolder text-uppercase">{this.state.account && this.state.account.alias}</b>, and the address {this.state.address} will gain {BigNumber(this.state.amount).multipliedBy(GetContractArgs().radio).toNumber() || ''} Deposit Asset.</p>
         </div>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">

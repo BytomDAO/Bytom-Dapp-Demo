@@ -43,7 +43,7 @@ class Save extends React.Component {
     const account = this.state.account
     const address = account.address
 
-    FixedLimitDeposit(account, amount, address)
+    FixedLimitDeposit(amount, address)
       .then(()=> {
           this.setState({
             error:'',
