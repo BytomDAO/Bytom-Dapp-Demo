@@ -1,24 +1,22 @@
 # Bytom-Dapp-Demo
 
 
-## what is this?
+## What is this?
 A simple deposit and profit bytom dapp demo, Bytom-Chrome-Extension needed before it can be used. 
 
-
 ## Setup
-Make sure you have the NodeJs installed before you started.
-start the webpack dev server:
+- Install [Node.js](https://nodejs.org) version 8 and the latest available npm@6.
+- Install dependencies: `npm install`.
 
-```
-npm start
-```
-Your server should now be running at http://127.0.0.1:8080 
+### Buffer Server
+Before run all the project, you may need to set up you own [bufferserver](https://github.com/oysheng/bufferserver). Configure the proxy rules under the `webpack.config.js`.
+
+### Deploy Contract
+Currently we are manually deploy the contract using the [equity compiler tool](https://github.com/Bytom/equity), and configure the `control program` constants accordingly.
 
 ### Contract configuration
 Network and smart contract control program's constants configurations are stored under the `contracts/configure.json.js` file.
 You may edit the configure after an new control program is launched.
-
-*Note: Currently we are manually deploy the contract using the [equity compiler tool](https://github.com/Bytom/equity), and configure the `control program` constants accordingly.
 
 ### Input and Output Object
 #### Input
@@ -55,6 +53,17 @@ Will need to be converted into
           output.push(controlAddressAction(billAmount, billAsset, address))
         }
 ```
+
+
+## Run the Project
+
+Make sure the contracts are compiled, built the correct input output object and bufferserver is running.
+
+Start the Webpack dev server.
+
+`npm start`
+
+Your server should now be running at http://127.0.0.1:8080
 
 ## Building the Project
    
