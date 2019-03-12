@@ -18,9 +18,20 @@ Your server should now be running at http://127.0.0.1:8080
 Network and smart contract control program's constants configurations are stored under the `contracts/configure.json.js` file.
 You may edit the configure after an new control program is launched.
 
-*Note: Currently we are manually deploy the contract using the [equity compiler tool](https://github.com/Bytom/equity), and configure the constants accordingly.
+*Note: Currently we are manually deploy the contract using the [equity compiler tool](https://github.com/Bytom/equity), and configure the `control program` constants accordingly.
 
 ### Input and Output Object
+#### Input
+The first Input object must be spend utxo action, utxo will be selected according to the amount matches.
+
+The second Spend Wallet Action, maybe needed if there is a exchanged. 
+ 
+```
+input.push(spendUTXOAction(utxo))
+input.push(spendWalletAction(amount, GetContractArgs().assetDeposited))
+```
+
+#### Output
 Since the contract type and logic are different, building the unlock action may be different.
 
 ```
