@@ -43,13 +43,21 @@ class Save extends React.Component {
     const account = this.state.account
     const address = account.address
 
+    this.refs.btn.setAttribute("disabled", "disabled")
+    this.setState({
+      error:'',
+      msg: ''
+    })
+
     FixedLimitDeposit(amount, address)
       .then(()=> {
+          this.refs.btn.removeAttribute("disabled");
           this.setState({
             error:'',
             msg:`Submit success!!! you spent ${amount} deposite asset,and gain ${amount} bill asset.`
           })
         }).catch(err => {
+          this.refs.btn.removeAttribute("disabled");
           this.setState({
             error:err,
             msg: ''
@@ -78,7 +86,7 @@ class Save extends React.Component {
               onChange={this.handleInputChange} />
           </div>
           <p>Fee:  {GetContractArgs().gas} BTM</p>
-          <button type="submit" className="btn btn-primary">Spend Asset</button>
+          <button ref="btn" type="submit" className="btn btn-primary">Spend Asset</button>
 
           {this.state.msg && <div className="alert alert-success mt-4" role="alert">
             {this.state.msg}

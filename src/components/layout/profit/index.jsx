@@ -44,19 +44,27 @@ class Profit extends React.Component {
     const account = this.state.account
     const address = event.target.address.value
 
+    this.refs.btn.setAttribute("disabled", "disabled")
+    this.setState({
+      error:'',
+      msg: ''
+    })
+
     FixedLimitProfit(account, amount, address)
       .then(()=> {
+        this.refs.btn.removeAttribute("disabled");
         this.setState({
           error:'',
           msg:`Submit success!!! you spent ${amount} bill asset, and gain ${BigNumber(amount).multipliedBy(GetContractArgs().radio).toNumber()} deposit asset.`
         })
       }).catch(err => {
-      this.setState({
-        error: err,
-        msg:''
+        this.refs.btn.removeAttribute("disabled");
+        this.setState({
+          error: err,
+          msg:''
+        })
       })
-    })
-  }
+    }
 
   render() {
     return (
@@ -88,7 +96,7 @@ class Profit extends React.Component {
               onChange={this.handleInputChange} />
           </div>
           <p>Fee:  {GetContractArgs().gas} BTM</p>
-          <button type="submit" className="btn btn-primary">Profit to address</button>
+          <button ref='btn' type="submit" className="btn btn-primary">Profit to address</button>
           {this.state.msg && <div className="alert alert-success mt-4" role="alert">
             {this.state.msg}
           </div>}

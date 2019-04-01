@@ -5,7 +5,7 @@ import { connect } from "react-redux"
 import jdenticon from "jdenticon"
 import action from "./action";
 import GetContractArgs from "../../constants";
-import { listBalances } from '../../bytom'
+import { listBalances } from '../../util/api'
 
 class Account extends Component {
   constructor(props) {

@@ -1,61 +1,13 @@
-import axios from 'axios'
+import axios from "axios/index";
 
-export function spendUTXOAction(utxo){
-  return {
-    "type": "spend_utxo",
-    "output_id": utxo
-  }
-}
-
-export function contractArguments(amount, address){
-  return [
-    {
-      "type": "integer",
-      "value": amount
-    },
-    {
-      "type": "address",
-      "value": address
-    },
-    {
-      "type": "data",
-      "value": ""
-    }
-  ]
-}
-
-export function spendWalletAction(amount, asset){
-  return {
-    "amount": amount,
-    "asset": asset,
-    "type": "spend_wallet"
-  }
-}
-
-export function controlProgramAction(amount, asset, program){
-  return {
-    "amount": amount,
-    "asset": asset,
-    "control_program": program,
-    "type": "control_program"
-  }
-}
-
-export function controlAddressAction(amount, asset, address){
-  return {
-    "amount": amount,
-    "asset": asset,
-    "address": address,
-    "type": "control_address"
-  }
-}
-
+//Api call using bytomAPI sdk
 export function listAddress(guid)
 {
   return bytomAPI.sdk.accounts.listAddressUseServer(guid)
     .then(resp => resp[0])
 }
 
+//Api call from Buffer server
 export function listDappUTXO(params)
 {
   let url

@@ -1,4 +1,4 @@
-import { listAddress } from '../../bytom'
+import { listAddress } from '../../util/api'
 
 
 import GetContractArgs from "../../constants";
