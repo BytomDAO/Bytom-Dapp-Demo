@@ -18,6 +18,14 @@ Currently we are manually deploy the contract using the [equity compiler tool](h
 Network and smart contract control program's constants configurations are stored under the `contracts/configure.json.js` file.
 You may edit the configure after an new control program is launched.
 
+### Dapp logic
+Under the `./src/components/util/submitContract.js`, you will see the basic and reusable logic, for developing a Dapp. Including the following steps:
+- list utxo from buffer server
+- create the custom contract transaction
+- lock utxo
+- call `window.bytom.advancedTransfer` to create the advanced Transaction
+- update balance if success.
+
 ### Input and Output Object
 #### Input
 The first Input object must be spend utxo action, utxo will be selected according to the amount matches.
