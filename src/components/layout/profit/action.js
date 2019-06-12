@@ -86,7 +86,7 @@ function createContractTransaction(resp, amountBill, saver) {
 }
 
 function updateDatatbaseBalance(resp, saver, amountBill, account){
-  const transactionHash = resp.message.result.data.transaction_hash
+  const transactionHash = resp.transaction_hash
   const radio = BigNumber( GetContractArgs().radio )
   const profitAmount = radio.multipliedBy(amountBill).toNumber()
   return updateBalances({

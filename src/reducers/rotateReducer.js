@@ -10,6 +10,11 @@ export default (state, action) => {
         ...state,
         depositAssetBalance: action.depositAssetBalance
       };
+    case "UPDATE_BYTOM":
+      return {
+        ...state,
+        bytom: action.bytom
+      };
     default:
       return state
   }

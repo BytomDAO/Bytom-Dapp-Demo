@@ -11,7 +11,7 @@ export function listAddress(guid)
 export function listDappUTXO(params)
 {
   let url
-  switch (window.bytom.defaultAccount.net){
+  switch (window.bytom.net){
     case "testnet":
       url = "/dapptestnet/list-utxos"
       break
@@ -24,7 +24,7 @@ export function listDappUTXO(params)
 export function updateUtxo(params)
 {
   let url
-  switch (window.bytom.defaultAccount.net) {
+  switch (window.bytom.net) {
     case "testnet":
       url = "/dapptestnet/update-utxo"
       break
@@ -37,7 +37,7 @@ export function updateUtxo(params)
 export function updateBalances(params)
 {
   let url
-  switch (window.bytom.defaultAccount.net) {
+  switch (window.bytom.net) {
     case "testnet":
       url = "/dapptestnet/update-balance"
       break
@@ -50,7 +50,7 @@ export function updateBalances(params)
 export function listBalances(params)
 {
   let url
-  switch (window.bytom.defaultAccount.net) {
+  switch (window.bytom.net) {
     case "testnet":
       url = "/dapptestnet/list-balances"
       break

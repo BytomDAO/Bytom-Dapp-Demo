@@ -14,9 +14,9 @@ const NetworkInfo = class extends Component {
   componentDidMount() {
     if (
       window.bytom
-      && window.bytom.defaultAccount
+      && window.bytom.default_account
     ) {
-      this.setState({ account: window.bytom.defaultAccount })
+      this.setState({ account: bytom.default_account })
     }
   }
 
@@ -24,7 +24,8 @@ const NetworkInfo = class extends Component {
     const account = this.state.account
 
     if (
-      account
+      window.bytom
+      && window.bytom.default_account
     ) {
       const svg = jdenticon.toSvg(account.alias, 40)
       return (
@@ -32,7 +33,7 @@ const NetworkInfo = class extends Component {
           <div className="nav-item  d-flex ">
             <NavLink  exact activeClassName="active" className="d-flex nav-link rounded js-scroll-trigger" to='/account'>
               <div className="mr-2" dangerouslySetInnerHTML={{__html:svg}} />
-              <div className="mt-auto mb-auto ">{account.alias}</div>
+              <div className="mt-auto mb-auto ">{window.bytom.default_account.alias}</div>
             </NavLink>
           </div>
         </div>
@@ -42,5 +43,6 @@ const NetworkInfo = class extends Component {
     }
   }
 }
+
 
 export default NetworkInfo

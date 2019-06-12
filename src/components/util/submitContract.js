@@ -23,22 +23,17 @@ export function submitContract(listDepositUTXO, createContractTransaction, updat
           .then(()=>{
 
             //Transactions
-            window.bytom.advancedTransfer(input, output, GetContractArgs().gas*100000000, args, 1)
+            return window.bytom.send_advanced_transaction({input, output, gas: GetContractArgs().gas*100000000, args})
               .then((resp) => {
-                if(resp.action === 'reject'){
-                  reject('user reject the request')
-                }else if(resp.action === 'success'){
-
                   //Update Balance
                   return updateDatatbaseBalance(resp, ...updateParameters).then(()=>{
                     resolve()
                   }).catch(err => {
                     throw err
                   })
-                }
               })
               .catch(err => {
-                throw err
+                throw err.message
               })
           })
           .catch(err => {

@@ -2,7 +2,7 @@ import rotateReducer from "./reducers/rotateReducer"
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
-function configureStore(state = { account: '' , depositAssetBalance:'',billAssetBalance:''}) {
+function configureStore(state = { account: '' , depositAssetBalance:'',billAssetBalance:'', bytom:''}) {
   return createStore(
     rotateReducer,
     state,

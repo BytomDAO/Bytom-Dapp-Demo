@@ -14,8 +14,8 @@ let gas
 let radio
 
 const GetContractArgs = function() {
-  if(window.bytom && window.bytom.defaultAccount && window.bytom.defaultAccount.net){
-    let network = window.bytom.defaultAccount.net
+  if(window.bytom && window.bytom.default_account && window.bytom.net){
+    let network = window.bytom.net
 
     const object = config[network]
     if(object){

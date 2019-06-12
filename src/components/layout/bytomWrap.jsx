@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {connect} from "react-redux";
 
 // This is a Higher Order Component (HOC) that wraps up any components that require
 // an unlocked Bytom account instance
@@ -10,9 +11,10 @@ export default function(WrappedComponent) {
     render () {
       let contents = <div />
 
+      const bytom = this.props.bytom
       if (
-        window.bytom
-        && window.bytom.defaultAccount
+        bytom
+        && bytom.default_account
       ) {
         return <WrappedComponent {...this.props} />
       }
@@ -58,7 +60,8 @@ export default function(WrappedComponent) {
     }
 
   }
-
-  return BytomWrap;
-
+  const mapStateToProps = state => ({
+    bytom: state.bytom,
+  })
+  return connect(mapStateToProps)(BytomWrap)
 }

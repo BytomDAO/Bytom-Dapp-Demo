@@ -2,6 +2,7 @@ import React from 'react'
 import { FixedLimitProfit } from './action'
 import GetContractArgs from "../../constants";
 import BigNumber from 'bignumber.js'
+import {connect} from "react-redux";
 
 class Profit extends React.Component {
 
@@ -19,11 +20,12 @@ class Profit extends React.Component {
   }
 
   componentDidMount() {
+    const bytom = this.props.bytom
     if (
-      window.bytom
-      && window.bytom.defaultAccount
+      bytom
+      && bytom.default_account
     ) {
-      this.setState({ account: window.bytom.defaultAccount })
+      this.setState({ account: bytom.default_account })
     }
   }
 
@@ -109,4 +111,8 @@ class Profit extends React.Component {
   }
 }
 
-export default Profit
+const mapStateToProps = state => ({
+  bytom: state.bytom,
+})
+
+export default connect(mapStateToProps)(Profit)

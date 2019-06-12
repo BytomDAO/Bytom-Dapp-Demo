@@ -77,13 +77,13 @@ function createContractTransaction(resp, amount, address){
 
 function updateDatatbaseBalance(resp, amount, address){
  return updateBalances({
-    "tx_id": resp.message.result.data.transaction_hash,
+    "tx_id": resp.transaction_hash,
     address,
     "asset": GetContractArgs().assetDeposited,
     "amount": -amount
   }).then(()=>{
     return updateBalances({
-      "tx_id": resp.message.result.data.transaction_hash,
+      "tx_id": resp.transaction_hash,
       address,
       "asset": GetContractArgs().assetBill,
       "amount": amount

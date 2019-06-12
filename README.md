@@ -23,7 +23,7 @@ Under the `./src/components/util/submitContract.js`, you will see the basic and 
 - list utxo from buffer server
 - create the custom contract transaction
 - lock utxo
-- call `window.bytom.advancedTransfer` to create the advanced Transaction
+- call `window.bytom.send_advanced_transaction` to create the advanced Transaction
 - update balance if success.
 
 ### Input and Output Object

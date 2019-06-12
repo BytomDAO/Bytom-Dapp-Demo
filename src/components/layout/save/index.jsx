@@ -1,6 +1,7 @@
 import React from 'react'
 import { FixedLimitDeposit} from './action'
 import GetContractArgs from '../../constants'
+import {connect} from "react-redux";
 
 class Save extends React.Component {
 
@@ -18,11 +19,12 @@ class Save extends React.Component {
   }
 
   componentDidMount() {
+    const bytom = this.props.bytom
     if (
-      window.bytom
-      && window.bytom.defaultAccount
+      bytom
+      && bytom.default_account
     ) {
-      this.setState({ account: window.bytom.defaultAccount })
+      this.setState({ account: bytom.default_account })
     }
   }
 
@@ -100,5 +102,8 @@ class Save extends React.Component {
     )
   }
 }
+const mapStateToProps = state => ({
+  bytom: state.bytom,
+})
 
-export default Save
+export default connect(mapStateToProps)(Save)

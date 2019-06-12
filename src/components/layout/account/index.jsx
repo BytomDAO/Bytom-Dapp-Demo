@@ -19,14 +19,15 @@ class Account extends Component {
   }
 
   componentDidMount() {
+    const bytom = this.props.bytom
     if (
-      window.bytom
-      && window.bytom.defaultAccount
+      bytom
+      && bytom.default_account
     ) {
-      const account = window.bytom.defaultAccount
+      const account = bytom.default_account
       this.setState({ account })
       if(account){
-        this.props.updateBalances(account.guid)
+        this.props.updateBalances(account.accountId)
         this.listBalance(account, GetContractArgs().assetDeposited)
       }
     }
@@ -119,7 +120,8 @@ class Account extends Component {
 
 const mapStateToProps = state => ({
   depositAssetBalance: state.depositAssetBalance,
-  billAssetBalance: state.billAssetBalance
+  billAssetBalance: state.billAssetBalance,
+  bytom: state.bytom
 })
 
 const mapDispatchToProps = dispatch => ({
