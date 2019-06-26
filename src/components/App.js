@@ -6,6 +6,7 @@ import Saving from './layout/save'
 import Footer from './layout/footer'
 import Header from './layout/header'
 import Account from './layout/account'
+import Constants from './layout/constants'
 import action from './action'
 import bytomWrap from './layout/bytomWrap'
 import {connect} from "react-redux";
@@ -18,7 +19,6 @@ class App extends Component {
     const { bytom, setBytom } = this.props;
     if(!bytom){
       document.addEventListener('chromeBytomLoaded', bytomExtension => {
-        console.log('bytomloaded');
         const bytom = window.bytom;
         setBytom(bytom);
         this.bytomLoaded(bytom);
@@ -28,7 +28,7 @@ class App extends Component {
     }
   }
 
-  bytomLoaded (bytom){
+  async bytomLoaded (bytom){
     let bytomPollInterval = 3 * 1000;
     let networks = {
       solonet: 'http://app.bycoin.io:3000/',
@@ -37,7 +37,8 @@ class App extends Component {
     };
 
     try {
-      const BYTOM_ACCOUNT = bytom.default_account
+      const BYTOM_ACCOUNT = await bytom.enable()
+      this.props.updateConnection(true)
 
       const bytomAPI = new Bytom(networks, '')
       bytomAPI.setNetType(bytom.net)
@@ -60,7 +61,7 @@ class App extends Component {
     return  (
       <div>
         <Header />
-        <Constants />
+        <Constants/>
         <section className="portfolio" id="portfolio">
           <div className="container">
             <Main />
@@ -71,29 +72,6 @@ class App extends Component {
     )
   }
 }
-
-const Constants = () =>(
-  <header className="masthead bg-primary text-white">
-    <div className="container">
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <span className="mr-5">Deposit Asset ID: </span>
-            </td>
-            <td>{GetContractArgs().assetDeposited}</td>
-          </tr>
-          <tr>
-            <td>
-              <span className="mr-5">Bill Asset ID: </span>
-            </td>
-            <td>{GetContractArgs().assetBill}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </header>
-);
 
 const Main = () => (
   <Switch>
@@ -110,6 +88,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setBytom: (bytom) => dispatch(action.setBytom(bytom)),
+  updateConnection: (bytomConnection) => dispatch(action.updateConnection(bytomConnection)),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

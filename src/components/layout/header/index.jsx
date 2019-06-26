@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import NetworkInfo from './NetworkInfo'
 
-const Header = class extends Component {
+class Header extends Component {
 
   constructor (props) {
     super(props)

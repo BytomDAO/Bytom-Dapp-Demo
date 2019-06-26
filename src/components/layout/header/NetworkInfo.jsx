@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import jdenticon from "jdenticon"
+import {connect} from "react-redux";
 
-const NetworkInfo = class extends Component {
+class NetworkInfo extends Component {
 
   constructor (props) {
     super(props)
@@ -12,9 +13,10 @@ const NetworkInfo = class extends Component {
   }
 
   componentDidMount() {
+    const bytom = this.props.bytom
     if (
-      window.bytom
-      && window.bytom.default_account
+      bytom
+      && bytom.default_account
     ) {
       this.setState({ account: bytom.default_account })
     }
@@ -22,10 +24,10 @@ const NetworkInfo = class extends Component {
 
   render() {
     const account = this.state.account
-
+    const bytom = this.props.bytom
     if (
-      window.bytom
-      && window.bytom.default_account
+      bytom
+      && bytom.default_account
     ) {
       const svg = jdenticon.toSvg(account.alias, 40)
       return (
@@ -33,7 +35,7 @@ const NetworkInfo = class extends Component {
           <div className="nav-item  d-flex ">
             <NavLink  exact activeClassName="active" className="d-flex nav-link rounded js-scroll-trigger" to='/account'>
               <div className="mr-2" dangerouslySetInnerHTML={{__html:svg}} />
-              <div className="mt-auto mb-auto ">{window.bytom.default_account.alias}</div>
+              <div className="mt-auto mb-auto ">{bytom.default_account.alias}</div>
             </NavLink>
           </div>
         </div>
@@ -44,5 +46,8 @@ const NetworkInfo = class extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  bytom: state.bytom
+})
 
-export default NetworkInfo
+export default connect(mapStateToProps)(NetworkInfo)

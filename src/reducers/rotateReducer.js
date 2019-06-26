@@ -15,6 +15,11 @@ export default (state, action) => {
         ...state,
         bytom: action.bytom
       };
+    case "UPDATE_BYTOM_CONNECTION":
+      return {
+        ...state,
+        bytomConnection: action.bytomConnection
+      };
     default:
       return state
   }

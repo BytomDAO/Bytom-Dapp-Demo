@@ -18,7 +18,22 @@ export default function(WrappedComponent) {
       ) {
         return <WrappedComponent {...this.props} />
       }
-      else if (( window.bytom )) {
+      else if (( bytom && !this.props.bytomConnection)) {
+        return (
+            <div className="columns">
+              <div className="column" />
+              <div className="column is-two-thirds">
+                <h1 className="title">
+                  Authenticate <strong>Bytom-Chrome-Extension</strong>.
+                </h1>
+                <p className="lead">
+                  Please Authenticate the connection request.
+                </p>
+              </div>
+              <div className="column" />
+            </div>
+        )
+      } else if (( bytom )) {
         return (
             <div className="columns">
               <div className="column" />
@@ -62,6 +77,7 @@ export default function(WrappedComponent) {
   }
   const mapStateToProps = state => ({
     bytom: state.bytom,
+    bytomConnection: state.bytomConnection
   })
   return connect(mapStateToProps)(BytomWrap)
 }
