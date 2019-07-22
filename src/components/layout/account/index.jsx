@@ -27,7 +27,9 @@ class Account extends Component {
       const account = bytom.default_account
       this.setState({ account })
       if(account){
-        this.props.updateBalances(account.accountId)
+        if(global.bytomAPI){
+          this.props.updateBalances(account.accountId)
+        }
         this.listBalance(account, GetContractArgs().assetDeposited)
       }
     }

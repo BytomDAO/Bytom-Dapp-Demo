@@ -15,13 +15,13 @@ import GetContractArgs from "./constants";
 import Bytom from 'bytom-js-sdk'
 
 class App extends Component {
-  componentDidMount(){
+  componentWillMount(){
     const { bytom, setBytom } = this.props;
     if(!bytom){
       document.addEventListener('chromeBytomLoaded', bytomExtension => {
         const bytom = window.bytom;
-        setBytom(bytom);
         this.bytomLoaded(bytom);
+        setBytom(bytom);
       });
     }else {
       this.bytomLoaded(bytom);
@@ -38,12 +38,13 @@ class App extends Component {
 
     try {
       const BYTOM_ACCOUNT = await bytom.enable()
-      this.props.updateConnection(true)
 
       const bytomAPI = new Bytom(networks, '')
       bytomAPI.setNetType(bytom.net)
 
       global.bytomAPI = bytomAPI
+
+      this.props.updateConnection(true)
 
       // Check to see if the user has signed in/out of their
       // bytom wallet or switched accounts
