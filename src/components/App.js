@@ -15,6 +15,16 @@ import GetContractArgs from "./constants";
 import Bytom from 'bytom-js-sdk'
 
 class App extends Component {
+  constructor(props){
+    super(props)
+    let networks = {
+      solonet: 'http://app.bycoin.io:3000/',
+      testnet: 'http://app.bycoin.io:3020/',
+      mainnet: 'https://api.bycoin.im:8000/'
+    };
+    global.bytomAPI = new Bytom(networks, '')
+  }
+
   componentWillMount(){
     const { bytom, setBytom } = this.props;
     if(!bytom){
@@ -30,21 +40,14 @@ class App extends Component {
 
   async bytomLoaded (bytom){
     let bytomPollInterval = 3 * 1000;
-    let networks = {
-      solonet: 'http://app.bycoin.io:3000/',
-      testnet: 'http://app.bycoin.io:3020/',
-      mainnet: 'https://api.bycoin.im:8000/'
-    };
 
     try {
       const BYTOM_ACCOUNT = await bytom.enable()
 
-      const bytomAPI = new Bytom(networks, '')
-      bytomAPI.setNetType(bytom.net)
-
-      global.bytomAPI = bytomAPI
-
       this.props.updateConnection(true)
+
+      global.bytomAPI.setNetType(bytom.net)
+
 
       // Check to see if the user has signed in/out of their
       // bytom wallet or switched accounts

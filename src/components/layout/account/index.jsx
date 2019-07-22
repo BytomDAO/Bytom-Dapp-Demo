@@ -28,6 +28,7 @@ class Account extends Component {
       this.setState({ account })
       if(account){
         if(global.bytomAPI){
+          global.bytomAPI.setNetType(bytom.net)
           this.props.updateBalances(account.accountId)
         }
         this.listBalance(account, GetContractArgs().assetDeposited)
