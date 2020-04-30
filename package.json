@@ -33,7 +33,7 @@
     "bignumber.js": "^8.0.2",
     "bootstrap": "^4.2.1",
     "jdenticon": "^2.1.1",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "popper.js": "^1.14.7",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
